@@ -1,6 +1,7 @@
 # YARBA ATS
 ### Yet Another Resume Builder App
 ATS-focused resume builder with template picker, live preview, and browser-native PDF export.
+ATS Template based on the [HTML ATS Resume](https://gist.github.com/meunomeebero/21a29f49336e0f4256e22e791afd8035) from [meunomeebero](https://github.com/meunomeebero).
 
 ---
 
@@ -76,6 +77,34 @@ For GitHub Pages builds, set `VITE_BASE_URL` in `.env.production` (already confi
 
 ---
 
+## GitHub Pages
+
+This repository includes an automatic GitHub Pages deployment workflow:
+
+- `.github/workflows/deploy-pages.yml`
+- Trigger: push to `main`/`master` or manual run
+- Build output: `dist/`
+
+To enable Pages in GitHub:
+
+1. Go to **Settings → Pages**.
+2. Set **Source** to **GitHub Actions**.
+3. Push to `main` (or run the workflow manually).
+
+Note: `VITE_BASE_URL` is set to `/yarba-ats/` in `.env.production`, which matches this repository name.
+
+---
+
+## Scripts
+
+- `npm run dev` — start local dev server
+- `npm run build` — production build
+- `npm run preview` — preview production build locally
+- `npm run test` — run tests once
+- `npm run test:watch` — run tests in watch mode
+
+---
+
 ## How To Use
 
 1. Run `npm run dev` (or `docker compose up`).
@@ -93,6 +122,9 @@ For GitHub Pages builds, set `VITE_BASE_URL` in `.env.production` (already confi
 
 ```text
 yarba-ats/
+├── .github/
+│   └── workflows/
+│       └── deploy-pages.yml
 ├── Dockerfile
 ├── docker-compose.yml
 ├── .env
@@ -103,6 +135,8 @@ yarba-ats/
 └── src/
     ├── App.jsx
     ├── main.jsx
+    ├── app/
+    │   └── ErrorBoundary.jsx
     ├── components/
     │   ├── ResumePreview.jsx
     │   ├── editors/
@@ -120,21 +154,40 @@ yarba-ats/
     ├── lib/
     │   ├── blankPreset.js
     │   ├── generateHTML.js
+    │   ├── generateHTML.test.js
     │   ├── i18n.js
     │   ├── importPdf.js
     │   ├── parseBold.js
     │   ├── serializeData.js
+    │   ├── serializeData.test.js
     │   ├── templateStore.js
     │   └── uid.js
+    ├── domain/
+    │   └── resume/
+    │       ├── constants.js
+    │       ├── index.js
+    │       ├── schema.js
+    │       ├── validateResume.js
+    │       └── validateResume.test.js
+    ├── features/
+    │   ├── resume-editor/
+    │   ├── resume-preview/
+    │   └── template-picker/
     ├── pages/
     │   └── TemplatePicker.jsx
+    ├── shared/
+    │   └── ui/
+    │       ├── ErrorFallback.jsx
+    │       └── ThemeToggleButton.jsx
     ├── styles/
     │   └── tokens.js
+    ├── test/
+    │   └── setup.js
     └── templates/
         ├── index.js
         └── data/
-            ├── backend-developer-pt.js
-            └── senior-engineer-en.js
+            ├── senior-engineer-en.js
+            └── senior-engineer-pt-br.js
 ```
 
 ---
