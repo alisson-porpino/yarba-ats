@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.DS_Store
+*.local
+*:Zone.Identifier
+
+# Generated output — commit your .html and .js variants, not the PDFs
+output/*.pdf
+
+# Local env overrides (not committed)
+.env.local
