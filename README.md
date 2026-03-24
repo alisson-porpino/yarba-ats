@@ -213,3 +213,10 @@ This is rendered as `<strong>` in HTML and in the exported PDF output. It does n
 - Semantic tags (`h1`, `ul`, `li`, `p`, `strong`)
 - System font stack (Arial/Helvetica)
 - `@page { margin: 0.5in 0.65in }` for consistent PDF margins
+
+---
+
+## License
+
+This project is licensed under the MIT License.
+See `LICENSE` for details.

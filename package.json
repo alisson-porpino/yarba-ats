@@ -2,6 +2,7 @@
   "name": "yarba-ats",
   "version": "1.0.0",
   "description": "ATS-optimized resume builder with live preview",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "vite",
