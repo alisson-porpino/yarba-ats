@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { T } from '../styles/tokens.js'
 import { getAllTemplates, deleteUserTemplate, isOnlineMode } from '../lib/templateStore.js'
-import { UI_LANGUAGES } from '../lib/i18n.js'
+import { UI_LANGUAGES, formatTemplateLanguage } from '../lib/i18n.js'
 import { ThemeToggleButton } from '../shared/ui/ThemeToggleButton.jsx'
 
 function MiniPreview({ data }) {
@@ -39,7 +39,7 @@ function MiniPreview({ data }) {
 
 function TemplateCard({ template, onSelect, onDelete, isHovered, onHover, text, muted, ui }) {
   const bg = isHovered ? '#222222' : T.card
-  const langBadge = String(template.lang || '').toUpperCase() === 'PT-BR' ? 'BR' : template.lang
+  const langBadge = formatTemplateLanguage(template.lang)
 
   return (
     <div

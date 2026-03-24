@@ -1,6 +1,7 @@
 
 import { templates as staticTemplates } from '../templates/index.js'
 import { uid } from './uid.js'
+import { formatTemplateLanguage } from './i18n.js'
 
 const IS_ONLINE = import.meta.env.VITE_APP_MODE === 'online'
 const STORAGE_KEY = 'yarba_user_templates'
@@ -19,7 +20,7 @@ export function saveTemplate(data, filename, name, description) {
     return { mode: 'download' }
   }
 
-  const lang = data.meta?.lang?.toUpperCase() || 'EN'
+  const lang = formatTemplateLanguage(data.meta?.lang)
   const tags = (data.skills?.[0]?.items?.slice(0, 3) || [])
     .concat(data.skills?.[1]?.items?.slice(0, 2) || [])
 
@@ -53,7 +54,19 @@ export const isOnlineMode = IS_ONLINE
 function loadFromStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    return raw ? JSON.parse(raw) : []
+    const parsed = raw ? JSON.parse(raw) : []
+    return parsed.map(template => {
+      const normalizedLang = formatTemplateLanguage(template?.lang || template?.data?.meta?.lang)
+      const normalizedDescription = typeof template?.description === 'string'
+        ? template.description.replace(/\bPT[_-]?BR\b/gi, 'BR')
+        : template?.description
+
+      return {
+        ...template,
+        lang: normalizedLang,
+        description: normalizedDescription,
+      }
+    })
   } catch {
     return []
   }

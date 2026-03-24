@@ -6,7 +6,8 @@ import { fromData, toTemplateFile }              from './lib/serializeData.js'
 import { saveTemplate as storeTemplate,
          isOnlineMode }                          from './lib/templateStore.js'
 import { t, DEFAULT_LABELS, LANGUAGES,
-         UI_LANGUAGES, normalizeLanguageCode } from './lib/i18n.js'
+         UI_LANGUAGES, normalizeLanguageCode,
+         formatTemplateLanguage }            from './lib/i18n.js'
 import { importPdfToData }                   from './lib/importPdf.js'
 import { validateResumeSafe }                  from './domain/resume/index.js'
 import { TemplatePicker }                      from './features/template-picker/index.js'
@@ -328,7 +329,7 @@ export default function App() {
     if (!validated.ok) return
 
     const name = filename.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
-    const desc = `${name} • ${lang.toUpperCase()}`
+    const desc = `${name} • ${formatTemplateLanguage(lang)}`
 
     if (isOnlineMode) {
       storeTemplate(validated.data, filename, name, desc)

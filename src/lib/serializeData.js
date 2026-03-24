@@ -1,4 +1,5 @@
 import { uid } from './uid.js'
+import { formatTemplateLanguage } from './i18n.js'
 
 const stripIds = (arr) => arr.map(({ id: _id, ...rest }) => rest)
 
@@ -66,7 +67,7 @@ export function toTemplateFile(data, id, name, description) {
     languages:  stripIds(data.languages),
   }
 
-  const lang = data.meta?.lang?.toUpperCase() || 'EN'
+  const lang = formatTemplateLanguage(data.meta?.lang)
 
   const tags = (data.skills?.[0]?.items?.slice(0, 3) || [])
     .concat(data.skills?.[1]?.items?.slice(0, 2) || [])

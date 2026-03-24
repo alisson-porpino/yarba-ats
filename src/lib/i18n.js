@@ -14,6 +14,13 @@ export function normalizeLanguageCode(code, fallback = 'en') {
   return LANGUAGE_ALIASES[normalized] || fallback
 }
 
+export function formatTemplateLanguage(code) {
+  const normalized = normalizeLanguageCode(code)
+  if (normalized === 'pt_br') return 'BR'
+  if (normalized === 'es') return 'ES'
+  return 'EN'
+}
+
 export const UI_LANGUAGES = [
   { code: 'en', label: 'EN — English'   },
   { code: 'pt_br', label: 'PT-BR — Português' },
