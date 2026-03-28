@@ -15,7 +15,11 @@ import { HeaderEditor, SummaryEditor, SkillsEditor,
          ExperienceEditor, EducationEditor, LanguagesEditor,
          DraggableNav }                        from './features/resume-editor/index.js'
 import { ResumePreview }                       from './features/resume-preview/index.js'
+import { ExportModal }                         from './shared/ui/ExportModal.jsx'
+import { NamedModal }                          from './shared/ui/NamedModal.jsx'
+import { Select }                              from './shared/ui/Select.jsx'
 import { ThemeToggleButton }                  from './shared/ui/ThemeToggleButton.jsx'
+import { Toast }                               from './shared/ui/Toast.jsx'
 
 
 function downloadBlob(content, filename, type) {
@@ -24,163 +28,6 @@ function downloadBlob(content, filename, type) {
   const a    = document.createElement('a')
   a.href = url; a.download = filename; a.click()
   URL.revokeObjectURL(url)
-}
-
-
-function Modal({ title, subtitle, children }) {
-  return (
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 100,
-      background: 'rgba(0,0,0,0.72)',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-    }}>
-      <div style={{
-        background: '#1a1a1a', border: `1px solid ${T.border}`,
-        borderRadius: '10px', padding: '28px 32px', width: '420px',
-        boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
-      }} role="dialog" aria-modal="true" aria-label={title}>
-        <div style={{ fontSize: '14px', fontWeight: 700, color: T.text, fontFamily: T.font, marginBottom: '5px' }}>
-          {title}
-        </div>
-        {subtitle && (
-          <p style={{ fontSize: '11px', color: T.muted, fontFamily: T.font, lineHeight: 1.6, marginBottom: '20px' }}>
-            {subtitle}
-          </p>
-        )}
-        {children}
-      </div>
-    </div>
-  )
-}
-
-function NamedModal({ title, subtitle, placeholder, fileNameLabel, hint, confirmLabel, cancelLabel, onConfirm, onClose }) {
-  const [name, setName] = useState('')
-  const isValid = /^[a-z0-9-]+$/.test(name) && name.length > 0
-
-  return (
-    <Modal title={title} subtitle={subtitle}>
-      <span style={S.label}>{fileNameLabel}</span>
-      <input
-        style={{ ...S.input, marginBottom: '14px' }}
-        value={name}
-        onChange={e => setName(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))}
-        placeholder={placeholder}
-        autoFocus
-        onKeyDown={e => e.key === 'Enter' && isValid && onConfirm(name)}
-        aria-label={fileNameLabel}
-      />
-      {hint && (
-        <div style={{
-          background: '#0d0d0d', borderRadius: '5px', padding: '9px 12px',
-          marginBottom: '16px', fontSize: '11px', color: T.muted, fontFamily: T.font, lineHeight: 1.7,
-        }}>
-          {hint(name)}
-        </div>
-      )}
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-        <button type="button" style={S.btnGhost} onClick={onClose}>{cancelLabel}</button>
-        <button
-          type="button"
-          style={{ ...S.btnPrimary, opacity: isValid ? 1 : 0.4, cursor: isValid ? 'pointer' : 'default' }}
-          onClick={() => isValid && onConfirm(name)}
-        >
-          {confirmLabel}
-        </button>
-      </div>
-    </Modal>
-  )
-}
-
-
-function Toast({ message, onClose }) {
-  return (
-    <div style={{
-      position: 'fixed', bottom: '24px', left: '50%', transform: 'translateX(-50%)',
-      zIndex: 200, background: '#2a1a1a', border: '1px solid #6b2020',
-      borderRadius: '7px', padding: '12px 18px', maxWidth: '460px', width: 'max-content',
-      display: 'flex', alignItems: 'flex-start', gap: '12px',
-      boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
-    }} role="alert" aria-live="assertive">
-      <span style={{ fontSize: '14px', flexShrink: 0 }}>⚠</span>
-      <div style={{ flex: 1 }}>
-        <div style={{ fontSize: '11px', fontWeight: 600, color: '#f87171', fontFamily: T.font, marginBottom: '3px' }}>Error</div>
-        <div style={{ fontSize: '11px', color: T.muted, fontFamily: T.font, lineHeight: 1.5 }}>{message}</div>
-      </div>
-      <button type="button" onClick={onClose} aria-label="Close error message" style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.muted, fontSize: '14px', lineHeight: 1, padding: 0, flexShrink: 0 }}>✕</button>
-    </div>
-  )
-}
-
-
-function ExportModal({ defaultName, ui, onExport, onClose }) {
-  const [name, setName] = useState(defaultName)
-  const isValid = name.trim().length > 0
-
-  return (
-    <Modal title={ui.buttons.exportPdf}>
-      <span style={S.label}>{ui.modals.fileNameLabel}</span>
-      <input
-        style={{ ...S.input, marginBottom: '14px' }}
-        value={name}
-        onChange={e => setName(e.target.value)}
-        placeholder="resume-en"
-        autoFocus
-        onKeyDown={e => e.key === 'Enter' && isValid && onExport(name.trim())}
-        aria-label={ui.modals.fileNameLabel}
-      />
-      <div style={{
-        background: '#0d0d0d', borderRadius: '5px', padding: '9px 12px',
-        marginBottom: '16px', fontSize: '11px', color: T.muted, fontFamily: T.font, lineHeight: 1.7,
-      }}>
-        Will save: <span style={{ color: T.text }}>{name.trim() || 'filename'}.pdf</span>
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px' }}>
-        <button type="button" style={S.btnGhost} onClick={onClose}>{ui.modals.cancel}</button>
-        <button
-          type="button"
-          style={{ ...S.btnPrimary, opacity: isValid ? 1 : 0.4, cursor: isValid ? 'pointer' : 'default' }}
-          onClick={() => isValid && onExport(name.trim())}
-        >
-          {ui.buttons.exportPdf}
-        </button>
-      </div>
-    </Modal>
-  )
-}
-
-
-function Select({ value, onChange, options, style, ariaLabel = 'Select option' }) {
-  return (
-    <div style={{ position: 'relative', display: 'inline-block', ...style }}>
-      <select
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        aria-label={ariaLabel}
-        style={{
-          background: '#1a1a1a',
-          border: `1px solid ${T.border}`,
-          borderRadius: '5px',
-          color: T.text,
-          fontSize: '11px',
-          fontWeight: 600,
-          fontFamily: T.font,
-          padding: '5px 28px 5px 10px',
-          cursor: 'pointer',
-          outline: 'none',
-          letterSpacing: '0.04em',
-          appearance: 'none',
-          WebkitAppearance: 'none',
-          width: '100%',
-        }}
-      >
-        {options.map(o => <option key={o.code} value={o.code}>{o.label}</option>)}
-      </select>
-      <span style={{
-        position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)',
-        pointerEvents: 'none', color: T.muted, fontSize: '9px',
-      }}>▾</span>
-    </div>
-  )
 }
 
 
