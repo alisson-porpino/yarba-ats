@@ -8,4 +8,6 @@ dist/
 output/*.pdf
 
 # Local env overrides (not committed)
+.env
+.env.production
 .env.local
